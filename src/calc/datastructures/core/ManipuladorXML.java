@@ -33,6 +33,7 @@ public class ManipuladorXML {
 	static List<Documento> listaDeDocumentos = new ArrayList<Documento>();
 
 	private static List<Pessoa> listaDePessoas = new ArrayList<Pessoa>();
+	private static List<Publicacao> listaDePublicacao = new ArrayList<Publicacao>();
 	private static Pessoa autor;
 
 	public static List<Documento> geraListaDeDocumentosComTermosDeTagsEspecificas(List<File> listaDeCurriculoXML) {
@@ -93,7 +94,9 @@ public class ManipuladorXML {
 			setId(atributosPai);
 			NodeList filhosDiretos = nodoPai.getChildNodes();
 			setNome(filhosDiretos);
+			
 			listaDePessoas.add(autor);
+			//todo 
 		}
 	}
 	
@@ -112,6 +115,16 @@ public class ManipuladorXML {
 					}
 					if (atributo.getNodeName().equals(ano)) {
 						publicacao.setAno(atributo.getValue());
+						if(!verificaPublicacao(publicacao)){
+							publicacao.setAutor(autor);
+							listaDePublicacao.add(publicacao);
+						}else {
+							
+							publicacao.setAutor(autor);
+						}
+						//verifica se publicacao ja existe
+						//se nao existir, criar uma publicacao e seta esse autor  autor
+						//senao quer dizerque jÃ¡ existe entao seta o autor atual  autor
 						autor.getPublicacoes().add(publicacao);
 					}
 
@@ -123,6 +136,15 @@ public class ManipuladorXML {
 
 		}
 
+	}
+	
+	private static boolean verificaPublicacao(Publicacao p){
+		for (Publicacao p1 : listaDePublicacao) {
+			if(p1.equals(p)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -220,13 +242,13 @@ public class ManipuladorXML {
 			document.getDocumentElement().normalize();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Erro na leitura dos currículos");
+			throw new RuntimeException("Erro na leitura dos currï¿½culos");
 		} catch (SAXException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Erro na leitura dos currículos");
+			throw new RuntimeException("Erro na leitura dos currï¿½culos");
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Erro na leitura dos currículos");
+			throw new RuntimeException("Erro na leitura dos currï¿½culos");
 		}
 		return document;
 	}
