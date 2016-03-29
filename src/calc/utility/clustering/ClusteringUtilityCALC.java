@@ -110,7 +110,7 @@ public class ClusteringUtilityCALC extends ClusteringUtility {
 
 	private static void criaArquivoAreasConhecimento(String caminhoDoCluster, List<String> areasDeConhecimento) {
 		try {
-			FileWriter fileWriter = new FileWriter(caminhoDoCluster + File.separator + "Areas de conhecimento.txt");
+			FileWriter fileWriter = new FileWriter(caminhoDoCluster + File.separator + "Coautoria.txt");
 			fileWriter.append(areasDeConhecimento.toString());
 			fileWriter.flush();
 			fileWriter.close();

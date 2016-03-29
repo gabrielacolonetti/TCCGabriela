@@ -49,7 +49,6 @@ public class GeradorClusterCSV {
 			fileWriter = new FileWriter("clusterGephi.csv");
 			fileWriter.append(FILE_HEADER.toString());
 			fileWriter.append(NEW_LINE_SEPARATOR);
-			System.out.println(clusters.size());
 			for (int clusterID = 0; clusterID < clusters.size(); clusterID++) {
 
 				List<DataObject> dataObjects = clusters.get(clusterID).getDataObjects();

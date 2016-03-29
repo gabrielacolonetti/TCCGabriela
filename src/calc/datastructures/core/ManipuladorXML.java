@@ -26,6 +26,9 @@ public class ManipuladorXML {
 	private static String nomeAutor = "NOME-COMPLETO";
 	private static String idAutor = "NUMERO-IDENTIFICADOR";
 	private static String idCnpq = "NRO-ID-CNPQ";
+	private static String titulo = "TITULO-DO-TRABALHO";
+	private static String ano = "ANO-DO-TRABALHO";
+	
 
 	static List<Documento> listaDeDocumentos = new ArrayList<Documento>();
 
@@ -45,7 +48,10 @@ public class ManipuladorXML {
 				Node nodoPai = document.getFirstChild();
 				NodeList filhosDiretos = nodoPai.getChildNodes();
 				setId(nodoPai.getAttributes());
-				setNome(filhosDiretos);
+				setNome(filhosDiretos);	
+				setPublicacoes(filhosDiretos);
+		
+
 				StringBuilder valoresDosAtributos = new StringBuilder();
 				List<String> listaAreaDeConhecimento = new ArrayList<String>();
 				for (int i = 0; i < filhosDiretos.getLength(); i++) {
@@ -90,6 +96,35 @@ public class ManipuladorXML {
 			listaDePessoas.add(autor);
 		}
 	}
+	
+	private static void setPublicacoes(NodeList filhosDiretos) {
+		Publicacao publicacao = new Publicacao();
+		
+		for (int i = 0; i < filhosDiretos.getLength(); i++) {
+			Node filhoDireto = filhosDiretos.item(i);
+			if (filhoDireto.getNodeType() == Node.ELEMENT_NODE) {
+				NamedNodeMap atributos = filhoDireto.getAttributes();
+
+				for (int j = 0; j < atributos.getLength(); j++) {
+					Attr atributo = (Attr) atributos.item(j);
+					if (atributo.getNodeName().equals(titulo)) {
+						publicacao.setTitulo(atributo.getValue());
+					}
+					if (atributo.getNodeName().equals(ano)) {
+						publicacao.setAno(atributo.getValue());
+						autor.getPublicacoes().add(publicacao);
+					}
+
+				}
+			} 
+			if (filhoDireto.getChildNodes().getLength() > 0) {
+				setPublicacoes(filhoDireto.getChildNodes());
+			}
+
+		}
+
+	}
+
 
 	private static void setNome(NodeList filhosDiretos) {
 		for (int i = 0; i < filhosDiretos.getLength(); i++) {

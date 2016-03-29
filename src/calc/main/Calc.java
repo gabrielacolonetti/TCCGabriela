@@ -79,12 +79,9 @@ public class Calc {
 		ClusteringProcess segundoProcesso = new ClusteringProcess();
 		segundoProcesso.setFeatureSelectionStrategy(new TermSelectionStrategy(stopwords));
 		segundoProcesso.setClusteringStrategy(new KmedoidsClusteringStrategy(valorDeK, -1, 2, 0));
-		System.out.println(calcFilesUtil.getCaminhoCurriculosTxt());
 		TextFilesUtilityCALC.addDataObjects(segundoProcesso, calcFilesUtil.getCaminhoCurriculosTxt(), documentos);
 		segundoProcesso.similarityMatrix = matrizDeSimilaridades;
-		System.out.println("1");
 		segundoProcesso.dataClusters = segundoProcesso.clusteringStrategy.executeClustering(primeiroProcesso.dataObjects, segundoProcesso.similarityMatrix);
-		System.out.println("2");
 		imprimeSimilaridadeEntreCadaArquivo(strategy);
 		Informativo.geraInfo("Agrupando os currículos...");
 		ClusteringUtilityCALC.writeClusterOfTextFiles(segundoProcesso, "K-MEDOIDS", "curriculos", caminhoDosCurriculosXML);
