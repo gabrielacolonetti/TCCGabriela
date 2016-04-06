@@ -11,6 +11,13 @@ public class Publicacao {
 	
 	public Publicacao() {
 		
+		
+	}
+	public Publicacao(String a, String t, List<Pessoa> aut){
+		this.ano = a;
+		this.titulo = t;
+		this.autores.addAll(aut);
+		
 	}
 
 
@@ -22,7 +29,8 @@ public class Publicacao {
 
 
 	public void setAutor(Pessoa autor) {
-		this.autores.add(autor);
+		System.out.println("autor: "+autor.getNome());
+		this.autores.add(new Pessoa(autor.getNome(), autor.getId()));
 	}
 
 

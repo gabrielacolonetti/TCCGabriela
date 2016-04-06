@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,12 +30,14 @@ public class ManipuladorXML {
 	private static String idCnpq = "NRO-ID-CNPQ";
 	private static String titulo = "TITULO-DO-TRABALHO";
 	private static String ano = "ANO-DO-TRABALHO";
+	public static boolean primeiraTupla = true;
+	public static Map<Tupla, Integer> listaRelacoes = new HashMap<Tupla, Integer>();
 	
 
 	static List<Documento> listaDeDocumentos = new ArrayList<Documento>();
 
-	private static List<Pessoa> listaDePessoas = new ArrayList<Pessoa>();
-	private static List<Publicacao> listaDePublicacao = new ArrayList<Publicacao>();
+	public static List<Pessoa> listaDePessoas = new ArrayList<Pessoa>();
+	public static List<Publicacao> listaDePublicacao = new ArrayList<Publicacao>();
 	private static Pessoa autor;
 
 	public static List<Documento> geraListaDeDocumentosComTermosDeTagsEspecificas(List<File> listaDeCurriculoXML) {
@@ -99,6 +103,35 @@ public class ManipuladorXML {
 			//todo 
 		}
 	}
+	/*Através da publicacao vamos olhar as pessoas que sao autoras e criar um Objeto Par
+	 * 1- Verificar se essa relacao já não existe
+	 * 2-Adicionar no mapa e incrementar o valor do INT
+	 * 
+	 * */
+	public static void criarPares(Pessoa p, Publicacao pub){
+		
+		 for (Pessoa pessoa : pub.getAutores()) {
+			 if(!primeiraTupla){
+				 for (Tupla par : listaRelacoes.keySet()) {
+						if(par.existeRelacao(pessoa, p)){
+							/*obter o peso da aresta para ser incrementado*/
+							listaRelacoes.put(par, listaRelacoes.get(par)+1);				
+							
+						}else{
+							listaRelacoes.put(new Tupla(pessoa, p), 1);
+						}
+						
+					}
+			 }else{
+				 if(!p.getId().equals(pessoa.getId())){
+					 listaRelacoes.put(new Tupla(p, pessoa), 1);
+					 primeiraTupla = false;
+				 }
+				 
+			 }
+			
+		}
+	}
 	
 	private static void setPublicacoes(NodeList filhosDiretos) {
 		Publicacao publicacao = new Publicacao();
@@ -115,6 +148,7 @@ public class ManipuladorXML {
 					}
 					if (atributo.getNodeName().equals(ano)) {
 						publicacao.setAno(atributo.getValue());
+						
 						if(!verificaPublicacao(publicacao)){
 							publicacao.setAutor(autor);
 							listaDePublicacao.add(publicacao);
@@ -122,10 +156,16 @@ public class ManipuladorXML {
 							
 							publicacao.setAutor(autor);
 						}
+						criarPares(autor, publicacao);
+						
 						//verifica se publicacao ja existe
 						//se nao existir, criar uma publicacao e seta esse autor  autor
 						//senao quer dizerque já existe entao seta o autor atual  autor
 						autor.getPublicacoes().add(publicacao);
+						/*Usar a classe Par para verificar as relações existentes entre autores
+						 *   
+						 * 
+						 * */
 					}
 
 				}
@@ -137,6 +177,10 @@ public class ManipuladorXML {
 		}
 
 	}
+	
+	
+	
+	 
 	
 	private static boolean verificaPublicacao(Publicacao p){
 		for (Publicacao p1 : listaDePublicacao) {
@@ -204,7 +248,9 @@ public class ManipuladorXML {
 
 				if (atributo.getOwnerElement().getParentNode().getParentNode().getParentNode().getNodeName()
 						.equals("PRODUCAO-BIBLIOGRAFICA")) {
+					//varre a lista de pessoas
 					for (int j = 0; j < listaDePessoas.size(); j++) {
+						//se a pessoa que ele esta analisando esta na lista de pessoas
 						if (listaDePessoas.get(j).getId().trim().equals(atributo.getValue())) {
 							boolean naoContem = !listaAreaDeConhecimento
 									.contains("[" + autor.getNome() + " ; " + listaDePessoas.get(j).getNome() + "]");
@@ -218,14 +264,14 @@ public class ManipuladorXML {
 				}
 
 			}
-			for (String atributoEspecifico : atributosEspecificos) {
-				if (!atributo.getNodeName().contains(atributoEspecifico))
-					continue;
-				if (atributo.getNodeName().contains("-INGLES") || atributo.getNodeName().contains("-EN"))
-					continue;
-				String valorDoAtributo = atributo.getValue();
-				valorDoField.append(valorDoAtributo + " ");
-			}
+				for (String atributoEspecifico : atributosEspecificos) {
+					if (!atributo.getNodeName().contains(atributoEspecifico))
+						continue;
+					if (atributo.getNodeName().contains("-INGLES") || atributo.getNodeName().contains("-EN"))
+						continue;
+					String valorDoAtributo = atributo.getValue();
+					valorDoField.append(valorDoAtributo + " ");
+				}
 
 		}
 		return valorDoField;

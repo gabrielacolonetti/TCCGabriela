@@ -14,6 +14,7 @@ import calc.clusteringstrategies.implementation.featureselection.TermSelectionSt
 import calc.clusteringstrategies.implementation.similarity.JaccardSimilarityStrategy;
 import calc.datastructures.core.CalcFilesUtil;
 import calc.datastructures.core.Documento;
+import calc.datastructures.core.Grafo;
 import calc.datastructures.core.ManipuladorXML;
 import calc.datastructures.core.NormalizadorString;
 import calc.interfacegrafica.Informativo;
@@ -38,7 +39,11 @@ public class AgrupadorCurriculosMain {
 		List<Documento> listaDeDocumentosComTermosDeTagsEspecificas = ManipuladorXML.geraListaDeDocumentosComTermosDeTagsEspecificas(listaDeCurriculoXML);
 
 		criaArquivosTxtComTermosNormalizados(listaDeDocumentosComTermosDeTagsEspecificas);
-
+		Grafo g = new Grafo();
+		g.criaVertice(ManipuladorXML.listaRelacoes);
+		System.out.println("MOSTRANDO");
+		System.out.println(g.toString());
+		
 		// TODO parametro do usuario
 		String threshold = "0.5";
 		geraClusters(Double.parseDouble(threshold), listaDeDocumentosComTermosDeTagsEspecificas);
@@ -83,7 +88,7 @@ public class AgrupadorCurriculosMain {
 		segundoProcesso.dataClusters = segundoProcesso.clusteringStrategy.executeClustering(primeiroProcesso.dataObjects, segundoProcesso.similarityMatrix);
 
 		imprimeSimilaridadeEntreCadaArquivo(strategy);
-		Informativo.geraInfo("Agrupando os currículos...");
+		Informativo.geraInfo("Agrupando os currï¿½culos...");
 		ClusteringUtilityCALC.writeClusterOfTextFiles(segundoProcesso, "K-MEDOIDS", "curriculos", caminhoDoCurriculosXML);
 	}
 

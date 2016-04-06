@@ -32,13 +32,13 @@ public class JanelaPrincipal extends JFrame {
 		try {
 			UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
-			Dialog.erro("N„o foi possÌvel carregar todos os estilos da aplicaÁ„o. Continuando sem estilos.");
+			Dialog.erro("N√£o foi poss√≠vel carregar todos os estilos da aplica√ß√£o. Continuando sem estilos.");
 		}
 		FormLayout formLayout = new FormLayout("10dlu, 100dlu, 50dlu, 50dlu, 10dlu", "20dlu, 10dlu ,20dlu ,50dlu, 10dlu");
 		JPanel panel = new JPanel();
 		PanelBuilder panelBuilder = new PanelBuilder(formLayout, panel);
 		CellConstraints cc = new CellConstraints();
-		panelBuilder.addLabel("DiretÛrio dos currÌculos Lattes", cc.xyw(2, 2, 2));
+		panelBuilder.addLabel("Diret√≥rio dos curr√≠culos Lattes", cc.xyw(2, 2, 2));
 
 		caminhoDiretorio = new JTextField();
 		caminhoDiretorio.setEditable(false);
@@ -58,7 +58,7 @@ public class JanelaPrincipal extends JFrame {
 	}
 
 	private Component botaoAgruparCurriculos() {
-		JButton botao = new JButton("Agrupar currrÌculos");
+		JButton botao = new JButton("Agrupar curr√≠culos");
 		botao.addActionListener(new ActionListener() {
 
 			@Override
@@ -66,29 +66,29 @@ public class JanelaPrincipal extends JFrame {
 
 				Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
 					public void uncaughtException(Thread th, Throwable ex) {
-						Dialog.erro("Ocorreu um erro durante a leitura dos currÌculos...");
-						Informativo.geraInfo("Ocorreu um erro durante a leitura dos currÌculos...");
+						Dialog.erro("Ocorreu um erro durante a leitura dos curr√≠culos...");
+						Informativo.geraInfo("Ocorreu um erro durante a leitura dos curr√≠culos...");
 					}
 				};
 
 				Thread t = new Thread(new Runnable() {
 					@Override
 					public void run() {
-						try {
-							if (caminhoDiretorio.getText().equals("")) {
-								Dialog.erro("Informe um diretÛrio v·lido.");
-								return;
-							}
-							Informativo.geraInfo("Aguarde enquanto os currÌculos s„o agrupados...");
-							Calc calc = new Calc(caminhoDiretorio.getText());
-							calc.agrupaCurriculos();
-							Informativo.geraInfo("Os currÌculos foram agrupados com sucesso!");
-							Desktop.getDesktop().open(new File(caminhoDiretorio.getText() + File.separator + "Clusters"));
-							Dialog.alerta("Os currÌculos foram agrupados com sucesso!");
-						} catch (IOException e) {
-							e.printStackTrace();
-							Dialog.erro(e.getMessage());
+						if (caminhoDiretorio.getText().equals("")) {
+							Dialog.erro("Informe um diret√≥rio v√°lido.");
+							return;
 						}
+						Informativo.geraInfo("Aguarde enquanto os curr√≠culos s√£o agrupados...");
+						Calc calc = new Calc(caminhoDiretorio.getText());
+						calc.agrupaCurriculos();
+						Informativo.geraInfo("Os curr√≠culos foram agrupados com sucesso!");
+						try {
+							Desktop.getDesktop().open(new File(caminhoDiretorio.getText() + File.separator + "Clusters"));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						Dialog.alerta("Os curr√≠culos foram agrupados com sucesso!");
 					}
 				});
 				t.setUncaughtExceptionHandler(h);

@@ -11,6 +11,10 @@ public class Pessoa {
 	public Pessoa() {
 		
 	}
+	public Pessoa(String nome, String id){
+		this.nome = nome;
+		this.id = id;
+	}
 	public String getNome() {
 		return nome;
 	}

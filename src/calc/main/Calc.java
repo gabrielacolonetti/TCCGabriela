@@ -14,8 +14,12 @@ import calc.clusteringstrategies.implementation.featureselection.TermSelectionSt
 import calc.clusteringstrategies.implementation.similarity.JaccardSimilarityStrategy;
 import calc.datastructures.core.CalcFilesUtil;
 import calc.datastructures.core.Documento;
+import calc.datastructures.core.Grafo;
 import calc.datastructures.core.ManipuladorXML;
 import calc.datastructures.core.NormalizadorString;
+import calc.datastructures.core.Pessoa;
+import calc.datastructures.core.Publicacao;
+import calc.datastructures.core.Tupla;
 import calc.interfacegrafica.Informativo;
 import calc.utility.clustering.ClusteringUtilityCALC;
 import calc.utility.datatypes.TextFilesUtilityCALC;
@@ -39,7 +43,28 @@ public class Calc {
 			List<File> listaDeCurriculoXML = calcFilesUtil.getCurriculosXML();
 			List<Documento> listaDeDocumentosComTermosDeTagsEspecificas = ManipuladorXML.geraListaDeDocumentosComTermosDeTagsEspecificas(listaDeCurriculoXML);
 			criaArquivosTxtComTermosNormalizados(listaDeDocumentosComTermosDeTagsEspecificas);
-
+			/*Iterar a lista de pessoas e para cada pessoa verificar a lista de pub
+			 * */
+//			for (int i = 0; i < ManipuladorXML.listaDePessoas.size();i++) {
+//				for (int j = 0; j < ManipuladorXML.listaDePublicacao.size();i++) {
+//					if(ManipuladorXML.primeiraTupla){
+//						
+//					}
+//					ManipuladorXML.criarPares(ManipuladorXML.listaDePessoas.get(i), ManipuladorXML.listaDePublicacao.get(j));
+//					
+//				}
+//			}
+			System.out.println(ManipuladorXML.listaDePessoas.size()+" "+ManipuladorXML.listaDePublicacao.size());
+			Grafo g = new Grafo();
+			g.criaVertice(ManipuladorXML.listaRelacoes);
+			
+			
+			
+			System.out.println("MOSTRANDO");
+			System.out.println(ManipuladorXML.listaRelacoes.size());
+			
+			
+			
 			// TODO parametro do usuario
 			String threshold = "0.5";
 			geraClusters(Double.parseDouble(threshold), listaDeDocumentosComTermosDeTagsEspecificas);
@@ -83,7 +108,7 @@ public class Calc {
 		segundoProcesso.similarityMatrix = matrizDeSimilaridades;
 		segundoProcesso.dataClusters = segundoProcesso.clusteringStrategy.executeClustering(primeiroProcesso.dataObjects, segundoProcesso.similarityMatrix);
 		imprimeSimilaridadeEntreCadaArquivo(strategy);
-		Informativo.geraInfo("Agrupando os currículos...");
+		Informativo.geraInfo("Agrupando os currï¿½culos...");
 		ClusteringUtilityCALC.writeClusterOfTextFiles(segundoProcesso, "K-MEDOIDS", "curriculos", caminhoDosCurriculosXML);
 	}
 
